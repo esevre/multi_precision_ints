@@ -14,9 +14,7 @@
 #include "multiprecision_integer.h"
 #include <cmath>
 
-namespace one::two{
-    double number() { return 2.0; }
-}
+
 
 
 int main() {
@@ -30,24 +28,14 @@ int main() {
     std::cout << (sv2 += sv1) << '\n';
     std::cout << c << "\n";
 
-    double pi = 3.1415;
-    double &x = pi;
+    std::cout << "c.ufo(sv2) : " << c.ufo(sv2) << "\n";
 
-    std::cout << "pi: " << pi << '\n';
-    std::cout << "x : " << x  << '\n';
-    pi++;
-    std::cout << "pi: " << pi << '\n';
-    std::cout << "x : " << x  << '\n';
-    x++;
-    std::cout << "pi: " << pi << '\n';
-    std::cout << "x : " << x  << '\n';
+    sv2 += sv1;
+    std::cout << "c.ufo(sv2) : " << c.ufo(sv2) << "\n";
 
-    std::cout << "&pi: " << &pi << '\n';
-    std::cout << "&x : " << &x  << '\n';
-
-
-    std::cout << one::two::number() << std::endl;
-
+    c += c;
+    c += c;
+    std::cout << "c.ufo(sv2) : " << c.ufo(sv2) << "\n";
 
 }
 
