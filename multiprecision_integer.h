@@ -24,13 +24,13 @@ public:
     // copy constructor
     multiprecision_integer(const multiprecision_integer &multi_int) : coefficients(multi_int.coefficients) { }
     // move constructor
-    multiprecision_integer(multiprecision_integer &&multi_int)
+    multiprecision_integer(multiprecision_integer &&multi_int) noexcept
             : coefficients(std::move(multi_int.coefficients)) { }
 
     //
     //  Custom constructors
     //
-    multiprecision_integer(UnsignedIntegerType num)
+    explicit multiprecision_integer(UnsignedIntegerType num)
             : coefficients(1)
     {
         coefficients[0] = num;
@@ -48,7 +48,7 @@ public:
         return *this;
     }
     // move assignment
-    multiprecision_integer &operator=(multiprecision_integer &&multi_int) {
+    multiprecision_integer &operator=(multiprecision_integer &&multi_int) noexcept {
         coefficients = std::move(multi_int.coefficients);
         return *this;
     }
