@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "multiprecision_integer.h"
+#include "multiprecision_integer_test.hpp"
 #include <cmath>
 
 
@@ -36,6 +37,9 @@ int main() {
     c += c;
     c += c;
     std::cout << "c.ufo(sv2) : " << c.ufo(sv2) << "\n";
+
+    run_equality_tests();
+    run_addition_tests();
 
 }
 

@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS -Wall)
 
-set(SOURCE_FILES main.cpp multiprecision_integer.h)
+set(SOURCE_FILES main.cpp multiprecision_integer.h multiprecision_integer_test.hpp)
 add_executable(multi_precision_ints ${SOURCE_FILES})

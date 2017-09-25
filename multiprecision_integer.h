@@ -1,6 +1,10 @@
 //
 // Created by Erik Sevre on 9/6/17.
 //
+//
+//  Class to store and compute with multiprecision integers
+//
+
 
 #pragma once
 
@@ -13,6 +17,7 @@
 template <typename UnsignedIntegerType>
 class multiprecision_integer {
 public:
+    // Data
     std::vector<UnsignedIntegerType> coefficients;
 
     //
@@ -26,6 +31,7 @@ public:
     // move constructor
     multiprecision_integer(multiprecision_integer &&multi_int) noexcept
             : coefficients(std::move(multi_int.coefficients)) { }
+
 
     //
     //  Custom constructors
@@ -66,10 +72,10 @@ public:
 
     bool operator==(const multiprecision_integer &rhs) const {
         const auto this_rev_it_end = std::rend(coefficients);
-        const auto this_rev_it_begin = std::find_if_not(std::rbegin(coefficients), this_rev_it_end, 0);
+        const auto this_rev_it_begin = std::find_if_not(std::rbegin(coefficients), this_rev_it_end, [](UnsignedIntegerType i){return i==0;});
 
         const auto rhs_rev_it_end = std::rend(rhs.coefficients);
-        const auto rhs_rev_it_begin = std::find_if_not(std::rbegin(rhs.coefficients), rhs_rev_it_end, 0);
+        const auto rhs_rev_it_begin = std::find_if_not(std::rbegin(rhs.coefficients), rhs_rev_it_end, [](UnsignedIntegerType i){return i==0;});
 
         return std::equal(this_rev_it_begin,
                           this_rev_it_end,
@@ -122,7 +128,6 @@ public:
         if (this_size > rhs_size) { return 1; }
         else if (this_size < rhs_size) { return -1; }
 
-
         //
         // size is the same, so check elementwise
         //
@@ -131,15 +136,26 @@ public:
         // check greater than
         if (*val.first > *val.second) { return 1; }
 
-
         // only option left is less than
         return -1;
-
     }
 
+    bool operator<(const multiprecision_integer &rhs) const {
+        return this->ufo(rhs) == -1;
+    }
+    bool operator>(const multiprecision_integer &rhs) const {
+        return this->ufo(rhs) == 1;
+    }
+    bool operator<=(const multiprecision_integer &rhs) const {
+        return !(rhs < *this);
+    }
+    bool operator>=(const multiprecision_integer &rhs) const {
+        return !(*this < rhs);
+    }
 
     UnsignedIntegerType operator[](size_t i) const { return coefficients[i]; }
     UnsignedIntegerType &operator[](size_t i) { return coefficients[i]; }
+
 
     multiprecision_integer &operator+=(const multiprecision_integer &rhs)
     {
@@ -167,6 +183,8 @@ public:
 
         coefficients.resize(std::max(coefficients_size, rhs_size));
 
+        // coefficients should be bigger, I will deal with this case later
+        // when I add negative integers
         if (coefficients_size <= rhs_size) {
             std::transform(std::begin(coefficients),
                            std::end(coefficients),
@@ -203,6 +221,52 @@ public:
 
     multiprecision_integer &operator-=(const multiprecision_integer &rhs)
     {
+        //
+        // lambda functions for adding and tracking remainder
+        //
+        //  Binary Adder is used for adding the two arrays together
+        //    This tracks the remainder and makes sure the digit is carried
+        //
+        UnsignedIntegerType remainder{0};
+        auto subtractor =
+                [&remainder](UnsignedIntegerType a, UnsignedIntegerType b=0) mutable -> UnsignedIntegerType
+                {
+                    auto val = a - remainder;
+                    auto result = val - b;
+                    if (result > val) {
+                        remainder = 1;
+                    } else if (result < val) {
+                        remainder = 0;
+                    }
+                    return result;
+                };
+
+        size_t coefficients_size = coefficients.size();
+        size_t rhs_size = rhs.coefficients.size();
+
+        coefficients.resize(std::max(coefficients_size, rhs_size));
+
+        if (coefficients_size <= rhs_size) {
+            std::transform(std::begin(coefficients),
+                           std::end(coefficients),
+                           std::begin(rhs.coefficients),
+                           std::begin(coefficients),
+                           subtractor);
+        } else {
+            std::transform(std::begin(rhs.coefficients),
+                           std::end(rhs.coefficients),
+                           std::begin(coefficients),
+                           std::begin(coefficients),
+                           subtractor);
+            std::transform(std::begin(coefficients)+rhs_size,
+                           std::end(coefficients),
+                           std::begin(coefficients) + rhs_size,
+                           subtractor);
+        }
+        if (remainder == 1) {
+            coefficients.push_back(1);
+        }
+
 
         return *this;
     }
