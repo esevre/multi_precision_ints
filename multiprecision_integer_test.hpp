@@ -19,20 +19,14 @@
 bool equality_test_01(bool verbose=true) {
     multiprecision_integer<uint64_t> a{1, 1, 1};
     multiprecision_integer<uint64_t> b{1, 1, 1};
-    if (a == b) {
-        return true;
-    }
-    return false;
+    return a == b;
 }
 
 // test equality returns false for false case (different bit in last place)
 bool equality_test_02(bool verbose=true) {
     multiprecision_integer<uint64_t> a{1, 1, 1};
     multiprecision_integer<uint64_t> b{1, 1, 2};
-    if (a == b) {
-        return false;
-    }
-    return true;
+    return !(a == b);
 }
 //
 //  Inequality tests
@@ -40,20 +34,14 @@ bool equality_test_02(bool verbose=true) {
 bool inequality_test_01(bool verbose=true) {
     multiprecision_integer<uint64_t> a{1, 1, 1};
     multiprecision_integer<uint64_t> b{1, 1, 2};
-    if (a != b) {
-        return true;
-    }
-    return false;
+    return a != b;
 }
 
 // Test the case where they are equal and false should be returned
 bool inequality_test_02(bool verbose=true) {
     multiprecision_integer<uint64_t> a{1, 1, 1};
     multiprecision_integer<uint64_t> b{1, 1, 1};
-    if (a != b) {
-        return false;
-    }
-    return true;
+    return !(a != b);
 }
 
 bool run_equality_tests(bool verbose = true) {
@@ -64,7 +52,6 @@ bool run_equality_tests(bool verbose = true) {
         std::cout << "*****     *****     *****     *****     *****     *****     *****\n";
         std::cout << "*****                    Equality Tests                     *****\n";
         std::cout << "*****     *****     *****     *****     *****     *****     *****\n";
-        std::cout << "\n";
         std::cout << " **  Equality test: operator==\n";
     }
     if (equality_test_01(verbose)){
@@ -118,10 +105,7 @@ bool addition_test_01(bool verbose=true) {
     multiprecision_integer<uint64_t> c = a + b;
     multiprecision_integer<uint64_t> c_result{2, 2, 2};
 
-    if (c == c_result) {
-        return true;
-    }
-    return false;
+    return c == c_result;
 }
 
 // test that addition works and variables carry
@@ -132,10 +116,7 @@ bool addition_test_02(bool verbose=true) {
     multiprecision_integer<unsigned long int> c = sv2 + sv1;
     multiprecision_integer<unsigned long int> c_result{0, 0, 0, 1};
 
-    if (c == c_result) {
-        return true;
-    }
-    return false;
+    return c == c_result;
 }
 
 
@@ -146,7 +127,6 @@ bool run_addition_tests(bool verbose=true) {
         std::cout << "*****     *****     *****     *****     *****     *****     *****\n";
         std::cout << "*****                    Addition Tests                     *****\n";
         std::cout << "*****     *****     *****     *****     *****     *****     *****\n";
-        std::cout << "\n";
         std::cout << " **  Addition test: operator+\n";
     }
 

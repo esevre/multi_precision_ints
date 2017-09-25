@@ -1,12 +1,6 @@
 //  Written by: Erik Sevre
-//  SNU-ID: 2014-XXXXX
 //  Date: September 14, 2017
 //
-//  Homework 01
-//
-//  In this homework we will solve several problems related to vectors,
-//  using the vector object from the standard template library (STL)
-//  in the std (standard) namespace.
 
 #include <iostream>
 #include <vector>

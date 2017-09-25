@@ -94,7 +94,7 @@ public:
     //          UFO (Spaceship) Operator
     //              <==>
     //     Checks less than, equal to, and greater than
-    //     no oficial operator in C++ yet, so use it as a member function
+    //     no official operator in C++ yet, so use it as a member function
     //          -1  :  Less than
     //           0  :  Equal to
     //           1  :  Greater than
@@ -129,7 +129,7 @@ public:
         else if (this_size < rhs_size) { return -1; }
 
         //
-        // size is the same, so check elementwise
+        // size is the same, so check element-wise
         //
         auto val = std::mismatch(this_rev_it_begin, this_rev_it_end, rhs_rev_it_begin);
 
@@ -166,7 +166,7 @@ public:
         //    This tracks the remainder and makes sure the digit is carried
         //
         UnsignedIntegerType remainder{0};
-        auto adder_binary =
+        auto adder =
                 [&remainder](UnsignedIntegerType a, UnsignedIntegerType b=0) mutable -> UnsignedIntegerType
                 {
                     auto val = a + b + remainder;
@@ -190,17 +190,17 @@ public:
                            std::end(coefficients),
                            std::begin(rhs.coefficients),
                            std::begin(coefficients),
-                           adder_binary);
+                           adder);
         } else {
             std::transform(std::begin(rhs.coefficients),
                            std::end(rhs.coefficients),
                            std::begin(coefficients),
                            std::begin(coefficients),
-                           adder_binary);
+                           adder);
             std::transform(std::begin(coefficients)+rhs_size,
                            std::end(coefficients),
                            std::begin(coefficients) + rhs_size,
-                           adder_binary);
+                           adder);
         }
         if (remainder == 1) {
             coefficients.push_back(1);
@@ -224,11 +224,12 @@ public:
         //
         // lambda functions for adding and tracking remainder
         //
-        //  Binary Adder is used for adding the two arrays together
+        //  Subtracter is used for adding the two arrays together
         //    This tracks the remainder and makes sure the digit is carried
         //
+        //  The second argument should be default 0, so we can use this in binary and unary operations
         UnsignedIntegerType remainder{0};
-        auto subtractor =
+        auto subtracter =
                 [&remainder](UnsignedIntegerType a, UnsignedIntegerType b=0) mutable -> UnsignedIntegerType
                 {
                     auto val = a - remainder;
@@ -251,17 +252,17 @@ public:
                            std::end(coefficients),
                            std::begin(rhs.coefficients),
                            std::begin(coefficients),
-                           subtractor);
+                           subtracter);
         } else {
             std::transform(std::begin(rhs.coefficients),
                            std::end(rhs.coefficients),
                            std::begin(coefficients),
                            std::begin(coefficients),
-                           subtractor);
+                           subtracter);
             std::transform(std::begin(coefficients)+rhs_size,
                            std::end(coefficients),
                            std::begin(coefficients) + rhs_size,
-                           subtractor);
+                           subtracter);
         }
         if (remainder == 1) {
             coefficients.push_back(1);
